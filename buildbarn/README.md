@@ -11,7 +11,7 @@ The following CLI tools are needed for the deployment. Available also through `f
 - [Helmfile](https://github.com/helmfile/helmfile)
 - [Helm](https://helm.sh/docs/intro/install/)
 
-### Steps
+## Steps
 
 The guide assumes that the user starts for the root of the repository.
 
@@ -49,7 +49,7 @@ zone_id     = "YOUR_ZONE_ID"
 public_ssh_key = "your-public-ssh-key"
 ```
 
-1. Create the AWS resources through terraform.
+### Create the AWS resources through terraform
 
 ```bash
 # Ensure the AWS credentials are loaded into the environment.
@@ -65,8 +65,10 @@ This will create the following resources:
 - A TLS certificate that will be used to expose the buildbarn services through a Kubernetes ingress.
 - IAM roles necessary for the Kubernetes services.
 
-2. Use the Ansible playbooks to provision the servers. We only need to setup the Nix server to make
-   it export `/nix/store` as an NFS share. Update the placeholders with your own values.
+###  Use Ansible to provision the nix server
+
+We only need to setup the Nix server to make it export `/nix/store` as an NFS share. Update the
+placeholders with your own values.
 
 First we need to create an inventory file to point ansible to our server:
 
@@ -83,7 +85,7 @@ cd ansible
 ansible-playbook -i hosts --extra-vars "ansible_user=ubuntu vpc_cidr=<VPC_CIDR>" -K <SSH_PRIV_KEY_PATH> nix-server.yml
 ```
 
-3. Login into the Kubernetes cluster
+### Access the Kubernetes cluster
 
 ```bash
 $ aws eks list-clusters --region <AWS_REGION>
@@ -96,7 +98,7 @@ $ aws eks list-clusters --region <AWS_REGION>
 $ aws eks update-kubeconfig --name buildbarn-cluster --alias buildbarn-cluster --region <AWS_REGION>
 ```
 
-4. Provision the cluster with the system services.
+### Provision the cluster with the Helm charts
 
 Create a directory named `local` on `buildbarn/kubernetes` to hold the specific configuration, for
 the `cluster-autoscaler`, `external-dns` and `ingress-nginx` Helm charts. Below are the templates
@@ -164,14 +166,7 @@ cd buildbarn/kubernetes
 helmfile -e dev -i apply
 ```
 
-5. Deploy the buildbarn services
-
-```
-cd buildbarn/kubernetes/buildbarn-resources
-kubectl apply -k .
-```
-
-6. Validate that the pods and services are working
+### Validate that the pods and services are working
 
 List all pods on the `buildbarn` namespace and check for any failures.
 
