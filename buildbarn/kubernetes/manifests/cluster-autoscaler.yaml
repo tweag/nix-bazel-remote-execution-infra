@@ -1,0 +1,17 @@
+autoDiscovery:
+  clusterName: buildbarn-cluster
+
+image:
+  tag: v1.28.2
+
+replicaCount: 2
+
+podDisruptionBudget:
+  maxUnavailable: 1
+
+resources:
+  limits:
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 50Mi

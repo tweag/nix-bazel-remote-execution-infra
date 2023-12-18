@@ -1,0 +1,56 @@
+defaultBackend:
+  enabled: true
+
+controller:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  metrics:
+    enabled: false
+  config:
+    use-gzip: "true"
+    gzip-level: "7"
+    gzip-min-length: "128"
+    error-log-level: "warn"
+    use-proxy-protocol: "true"
+    proxy-body-size: "50m"
+    http-snippet: |
+      map true $pass_access_scheme {
+        default "https";
+      }
+      map true $pass_port {
+        default 443;
+      }
+      server {
+        listen 2443 proxy_protocol;
+        return 308 https://$host$request_uri;
+      }
+    real-ip-header: "proxy_protocol"
+    set-real-ip-from: "0.0.0.0/0"
+    use-forwarded-headers: "true"
+    upstream-keepalive-timeout: "300"
+    proxy-buffering: "on"
+    log-format-upstream: '$remote_addr - $http_x_forwarded_for [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $request_length $request_time [$proxy_upstream_name] [$proxy_alternative_upstream_name] $upstream_addr $upstream_response_length $upstream_response_time $upstream_status $req_id'
+  containerPort:
+    http: 80
+    https: 443
+    # Workaround based on https://github.com/kubernetes/ingress-nginx/issues/2724 and https://github.com/kubernetes/ingress-nginx/issues/6822
+    tohttps: 2443
+  service:
+    targetPorts:
+      http: tohttps
+      https: http
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+      service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'

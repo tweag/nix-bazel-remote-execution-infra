@@ -1,0 +1,77 @@
+- name: Set up NFS share on nix server
+  user: ubuntu
+  hosts: all
+  become: yes
+
+  vars:
+    server_mount_point: /nix/store
+
+  tasks:
+    - name: Install prerequisites for Nix
+      apt:
+        name:
+        - curl
+        - xz-utils
+        - bzip2
+        - sudo
+
+        # BuildGrid dependencies
+        - python3
+        - python3-dev
+        - python3-pip
+        - python3-venv
+        - libssl-dev
+        - libcurl4-openssl-dev
+        - gcc
+        state: present
+        update_cache: yes
+
+    - name: Download Nix installer script
+      get_url:
+        url: https://nixos.org/nix/install
+        dest: /tmp/install-nix
+
+    - name: Run Nix installer script
+      become: no
+      shell: /bin/bash /tmp/install-nix
+      environment:
+        USER: "ubuntu"
+
+    - name: Create Nix profile
+      shell: echo ". /home/ubuntu/.nix-profile/etc/profile.d/nix.sh" >> /home/ubuntu/.bashrc
+
+    - name: Create nix store symlink to /usr/bin
+      shell: sudo ln -sf /home/ubuntu/.nix-profile/bin/nix-store /usr/bin/
+
+    - name: Create nix daemon symlink to /usr/bin
+      shell: sudo ln -sf /home/ubuntu/.nix-profile/bin/nix-daemon /usr/bin/
+
+    - name: Install NFS packages
+      apt:
+        name:
+          - nfs-kernel-server
+          - nfs-common
+        state: present
+
+    - name: Create shared directory on server
+      file:
+        path: "/nix/store"
+        state: directory
+        mode: '0777'
+        owner: nobody
+        group: nogroup
+        recurse: no
+
+    - name: Configure NFS server
+      lineinfile:
+        path: /etc/exports
+        line: "/nix/store {{ vpc_cidr}}(ro,sync,no_subtree_check)"
+        state: present
+      notify:
+        - restart nfs-kernel-server
+
+  handlers:
+    - name: restart nfs-kernel-server
+      service:
+        name: nfs-kernel-server
+        state: restarted

@@ -1,0 +1,15 @@
+provider: aws
+policy: sync
+
+aws:
+  zoneType: "public"
+
+serviceAccount:
+  name: external-dns
+
+resources:
+  limits:
+    memory: 128Mi
+  requests:
+    cpu: 20m
+    memory: 50Mi
