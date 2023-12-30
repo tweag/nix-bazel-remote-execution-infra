@@ -177,7 +177,7 @@ The following command will install the necessary system services with the Helm p
 
 ```bash
 cd buildbarn/kubernetes
-helmfile -e dev -i apply
+helmfile --concurrency=1 apply -i
 ```
 
 ### Validate that the pods and services are working
