@@ -109,6 +109,10 @@ Create a directory named `local` under `buildbarn/kubernetes` to hold the specif
 the `cluster-autoscaler`, `external-dns` and `ingress-nginx` Helm charts. Below are the templates
 that can you use and update with your actual values accordingly.
 
+For the deployment of BuildBarn components, a Helm chart has been developed based on the [upstream
+manifests][buildbarn_manifests] provided by the project. This Helm chart makes it easier to
+parameterize the configuration files.
+
 ```bash
 $ cd buildbarn/terraform
 
@@ -215,3 +219,5 @@ $ nc -v add0b523b70aa45c183e59e674383777-1490091402.eu-west-1.elb.amazonaws.com 
 Ncat: Version 7.93 ( https://nmap.org/ncat )
 Ncat: Connected to 34.241.215.173:8980.
 ```
+
+[buildbarn_manifests]: https://github.com/buildbarn/bb-deployments/tree/1f221b54c99b57e3953865a75069a84245d96b56/kubernetes
