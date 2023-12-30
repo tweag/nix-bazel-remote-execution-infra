@@ -2,7 +2,8 @@
 
 ### Tools
 
-The following CLI tools are needed for the deployment. Available also through `flake.nix`.
+The following CLI tools are needed for the deployment. Available also through `flake.nix`,
+run `nix develop` to enter an environment with these tools installed.
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads?product_intent=terraform)
 - [aws-cli](https://aws.amazon.com/cli/)
@@ -13,14 +14,18 @@ The following CLI tools are needed for the deployment. Available also through `f
 
 ## Steps
 
-The guide assumes that the user starts for the root of the repository.
+The guide assumes that the user is in a shell session at root of the repository
+at every step.
 
-0. Create a `backend.tf` file with your terraform backend configuration and place the module
-   configuration on the `variables.tfvars` file.
+### Create your custom configuration
 
-e.g
+Create the following configuration files under `buildbarn/terraform`: A
+`backend.tf` file with your terraform backend configuration and place the
+module configuration into the `variables.tfvars` file. E.g.
 
 ```bash
+$ cd buildbarn/terraform
+
 $ cat backend.tf
 terraform {
   backend "s3" {
@@ -100,11 +105,13 @@ $ aws eks update-kubeconfig --name buildbarn-cluster --alias buildbarn-cluster -
 
 ### Provision the cluster with the Helm charts
 
-Create a directory named `local` on `buildbarn/kubernetes` to hold the specific configuration, for
+Create a directory named `local` under `buildbarn/kubernetes` to hold the specific configuration, for
 the `cluster-autoscaler`, `external-dns` and `ingress-nginx` Helm charts. Below are the templates
 that can you use and update with your actual values accordingly.
 
 ```bash
+$ cd buildbarn/terraform
+
 $ cat local/cluster-autoscaler.yaml
 
 awsRegion: <AWS_REGION>
@@ -155,7 +162,7 @@ scheduler:
   host: bb-scheduler.example.org
 
 nix:
-  ip: 10.0.0.0.1
+  ip: 10.0.0.1
   path: /nix/store
 ```
 
