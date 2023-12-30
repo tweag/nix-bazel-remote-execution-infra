@@ -77,6 +77,17 @@ build --remote_header=x-api-key=<API_KEY> # This is a basic authentication token
 
 5. Initiate the Bazel build process.
 
+You can use the [bb-deployments][bb-deployments] repo as an example test out the deployment.
+
+```bash
+git clone https://github.com/buildbarn/bb-deployments
+
+cd bb-deployments
+
+# Update .bazelrc with the service endpoint from the Kubernetes deploument.
+bazel build --config=remote-ubuntu-22-04 @abseil-hello//...
+```
+
 ## Deployment
 
 For detailed deployment instructions, refer to [Buildbarn](./buildbarn/README.md)
@@ -88,3 +99,4 @@ For detailed deployment instructions, refer to [Buildbarn](./buildbarn/README.md
 [helm]: https://github.com/helm/helm
 [helmfile]: https://github.com/helmfile/helmfile
 [nix]: https://nixos.org/
+[bb-deployments]: https://github.com/buildbarn/bb-deployments
