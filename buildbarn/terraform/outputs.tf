@@ -25,3 +25,11 @@ output "nix_server_private_ip" {
 output "vpc_cidr" {
   value = var.vpc_cidr
 }
+
+output "acm_certificate_arn" {
+  value = module.acm.acm_certificate_arn
+}
+
+output "route53_zone_id" {
+  value = var.zone_id
+}
