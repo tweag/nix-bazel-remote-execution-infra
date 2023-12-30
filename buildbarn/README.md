@@ -83,14 +83,14 @@ First we need to create an inventory file to point ansible to our server:
 ```bash
 $ cat ansible/hosts
 [nix_server]
-<public-ip-of-nix-server>
+<public-ip-of-nix-server> # Taken from the terraform output.
 ```
 
 And then we can apply the playbook:
 
 ```bash
 cd ansible
-ansible-playbook -i hosts --extra-vars "ansible_user=ubuntu vpc_cidr=<VPC_CIDR>" -K <SSH_PRIV_KEY_PATH> nix-server.yml
+ansible-playbook -i hosts --extra-vars "ansible_user=ubuntu vpc_cidr=<VPC_CIDR>" --private-key <SSH_PRIVATE_KEY_PATH> nix-server.yml
 ```
 
 ### Access the Kubernetes cluster
@@ -169,7 +169,7 @@ scheduler:
   host: bb-scheduler.example.org
 
 nix:
-  ip: 10.0.0.1
+  ip: 10.0.0.1 # Update with actual private IP of the nix server from the terraform output.
   path: /nix/store
 ```
 
