@@ -1,0 +1,15 @@
+# Run terraform init
+init:
+  terraform init
+  
+# Run terraform plan with provided variables
+plan:
+  terraform plan -var-file=variables.tfvars
+
+# Run terraform apply with provided variables
+apply:
+  terraform apply -var-file=variables.tfvars
+
+# Run terraform destroy with provided variables
+destroy:
+  terraform destroy -var-file=variables.tfvars

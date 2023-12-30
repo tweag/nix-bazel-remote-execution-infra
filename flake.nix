@@ -25,6 +25,7 @@
             awscli2
             kubernetes-helm
             helmfile
+            just
           ];
         };
       });

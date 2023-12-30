@@ -31,28 +31,31 @@ terraform {
   backend "s3" {
     bucket = "my-terraform-state"
     key    = "buildbarn/terraform.tfstate"
-    region = "us-east-1"
+    region = "<AWS_REGION>"
   }
 }
 
 $ cat variables.tfvars
+aws_account_id = "<AWS_ACCOUNT_ID>"
+
+region = "<AWS_REGION>
+
 tags = {
  terraform = "true"
  env       = "buildbarn-nix"
  project   = "bazel-nix"
 }
 
-vpc_cidr = "10.8.0.0/16"
-prefix   = "my-buildbarn-env"
-
-ami           = "ami-01dd271720c1ba44f"
-instance_type = "t3a.large"
+prefix = "my-buildbarn-env"
+ami    = "ami-01dd271720c1ba44f"
 
 domain_name = "example.org"
-zone_id     = "YOUR_ZONE_ID"
+zone_id     = "<YOUR_ZONE_ID>"
 
 public_ssh_key = "your-public-ssh-key"
 ```
+
+Review the `variables.tf` file for all the available configuration options that you can override.
 
 ### Create the AWS resources through terraform
 
@@ -61,7 +64,7 @@ public_ssh_key = "your-public-ssh-key"
 cd buildbarn/terraform
 terraform init
 terraform plan -var-file=variables.tfvars
-terraform apply
+terraform apply -var-file=variables.tfvars
 ```
 
 This will create the following resources:
@@ -124,7 +127,7 @@ rbac:
   create: true
   serviceAccount:
     annotations:
-      eks.amazonaws.com/role-arn: <CLUSTER_AUTOSCALER_IAM_ROLE>
+      eks.amazonaws.com/role-arn: <CLUSTER_AUTOSCALER_IAM_ROLE> # Available as a terraform output
     create: true
     name: cluster-autoscaler
 ```
@@ -137,7 +140,7 @@ aws:
 
 serviceAccount:
   annotations:
-    eks.amazonaws.com/role-arn: <EXTERNAL_DNS_IAM_ROLE>
+    eks.amazonaws.com/role-arn: <EXTERNAL_DNS_IAM_ROLE> # Available as a terraform output
 
 txtOwnerId: <txtownerid>
 txtPrefix: extdns-
@@ -153,7 +156,7 @@ $ cat local/ingress-nginx.yaml
 controller:
   service:
     annotations:
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: <AWS_ACM_CERT_ARN>
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: <AWS_ACM_CERT_ARN> # Available as a terraform output
 ```
 
 ```bash
