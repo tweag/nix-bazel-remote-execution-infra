@@ -53,7 +53,7 @@ tags = {
 }
 
 prefix = "my-buildbarn-env"
-ami    = "ami-01dd271720c1ba44f"
+ami    = "ami-039258d4169293e75"
 
 domain_name = "example.org"
 zone_id     = "<YOUR_ZONE_ID>"
