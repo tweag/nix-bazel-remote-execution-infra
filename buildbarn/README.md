@@ -99,6 +99,12 @@ cd ansible
 ansible-playbook -i hosts --extra-vars "ansible_user=ubuntu vpc_cidr=<VPC_CIDR>" --private-key <SSH_PRIVATE_KEY_PATH> nix-server.yml
 ```
 
+If you encounter locale issues you may want to prefix with
+
+```bash
+LANC=C.UTF-8 LC_ALL=C.UTF-8 ansible-playbook ...
+```
+
 ### Access the Kubernetes cluster
 
 ```bash
