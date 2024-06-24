@@ -12,8 +12,18 @@
       let
         pkgs = import nixpkgs {
           inherit system;
+          overlays = [(final: prev: {
+            # https://github.com/NixOS/nixpkgs/issues/267864
+            awscli2 = prev.awscli2.overrideAttrs (oldAttrs: {
+              nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ pkgs.makeWrapper ];
+              doCheck = false;
+              postInstall = ''
+                ${oldAttrs.postInstall}
+                wrapProgram $out/bin/aws --set PYTHONPATH=
+              '';
+            });
+          })];
         };
-
       in
       {
         devShells.default = with pkgs; mkShell {
