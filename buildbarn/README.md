@@ -17,6 +17,11 @@ run `nix develop` to enter an environment with these tools installed.
 The guide assumes that the user is in a shell session at root of the repository
 at every step.
 
+### Create an S3 bucket for Terraform state
+
+Manually create an S3 bucket on AWS in the appropriate region to store the
+Terraform state. In this example we will name it `my-terraform-state`.
+
 ### Create your custom configuration
 
 Create the following configuration files under `buildbarn/terraform`: A
