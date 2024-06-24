@@ -129,7 +129,7 @@ manifests][buildbarn_manifests] provided by the project. This Helm chart makes i
 parameterize the configuration files.
 
 ```bash
-$ cd buildbarn/terraform
+$ cd buildbarn/kubernetes
 
 $ cat local/cluster-autoscaler.yaml
 
