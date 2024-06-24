@@ -43,7 +43,8 @@ terraform {
 $ cat variables.tfvars
 aws_account_id = "<AWS_ACCOUNT_ID>"
 
-region = "<AWS_REGION>
+region = "<AWS_REGION>"
+vpc_azs = ["<AWS_AVAILABILITY_ZONE1>", "<AWS_AVAILABILITY_ZONE2>"]
 
 tags = {
  terraform = "true"
