@@ -53,7 +53,7 @@ tags = {
 }
 
 prefix = "my-buildbarn-env"
-ami    = "ami-039258d4169293e75"
+ami    = "ami-039258d4169293e75" # Make sure to pick the correct ubuntu 22.04 AMI for your region (https://cloud-images.ubuntu.com/locator/ec2/)
 
 domain_name = "example.org"
 zone_id     = "<YOUR_ZONE_ID>"
