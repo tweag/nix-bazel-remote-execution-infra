@@ -33,8 +33,8 @@
             ansible
             kubectl
             awscli2
-            kubernetes-helm
-            helmfile
+            (kubernetes-helm-wrapped.override { plugins = with kubernetes-helmPlugins; [ helm-diff ]; })
+            helmfile-wrapped
             just
           ];
         };
