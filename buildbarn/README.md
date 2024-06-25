@@ -175,10 +175,10 @@ controller:
 $ cat local/buildbarn.yaml
 
 browser:
-  host: bb-browser.example.org
+  host: bb-browser.<YOUR_DOMAIN>
 
 scheduler:
-  host: bb-scheduler.example.org
+  host: bb-scheduler.<YOUR_DOMAIN>
 
 nix:
   ip: 10.0.0.1 # Update with actual private IP of the nix server from the terraform output.
