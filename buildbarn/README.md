@@ -219,7 +219,7 @@ NAME        CLASS   HOSTS                       ADDRESS                         
 browser     nginx   bb-browser.bazelnix.net     af06a8018c91145e89999e0fb55192fe-1992479129.eu-west-1.elb.amazonaws.com   80      2d23h
 scheduler   nginx   bb-scheduler.bazelnix.net   af06a8018c91145e89999e0fb55192fe-1992479129.eu-west-1.elb.amazonaws.com   80      2d23h
 
-$ nc -v af06a8018c91145e89999e0fb55192fe-1992479129.eu-west-1.elb.amazonaws.com 8980
+$ nc -v af06a8018c91145e89999e0fb55192fe-1992479129.eu-west-1.elb.amazonaws.com 80
 Ncat: Version 7.93 ( https://nmap.org/ncat )
 Ncat: Connected to 34.241.215.173:80.
 ```
