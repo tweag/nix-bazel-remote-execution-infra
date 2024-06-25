@@ -45,6 +45,7 @@ metadata:
   annotations:
     prometheus.io/port: "80"
     prometheus.io/scrape: "true"
+    external-dns.alpha.kubernetes.io/hostname: {{ required "Missing frontend.host value" .Values.frontend.host }}
   name: frontend
 spec:
   ports:

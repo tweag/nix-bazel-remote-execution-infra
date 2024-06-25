@@ -162,6 +162,9 @@ controller:
 ```bash
 $ cat local/buildbarn.yaml
 
+frontend:
+  host: bb-frontend.example.org
+
 browser:
   host: bb-browser.example.org
 
