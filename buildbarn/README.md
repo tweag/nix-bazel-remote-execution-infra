@@ -17,6 +17,11 @@ run `nix develop` to enter an environment with these tools installed.
 The guide assumes that the user is in a shell session at root of the repository
 at every step.
 
+### Create an S3 bucket for Terraform state
+
+Manually create an S3 bucket on AWS in the appropriate region to store the
+Terraform state. In this example we will name it `my-terraform-state`.
+
 ### Create your custom configuration
 
 Create the following configuration files under `buildbarn/terraform`: A
@@ -38,7 +43,8 @@ terraform {
 $ cat variables.tfvars
 aws_account_id = "<AWS_ACCOUNT_ID>"
 
-region = "<AWS_REGION>
+region = "<AWS_REGION>"
+vpc_azs = ["<AWS_AVAILABILITY_ZONE1>", "<AWS_AVAILABILITY_ZONE2>"]
 
 tags = {
  terraform = "true"
@@ -47,7 +53,7 @@ tags = {
 }
 
 prefix = "my-buildbarn-env"
-ami    = "ami-01dd271720c1ba44f"
+ami    = "ami-039258d4169293e75" # Make sure to pick the correct ubuntu 22.04 AMI for your region (https://cloud-images.ubuntu.com/locator/ec2/)
 
 domain_name = "example.org"
 zone_id     = "<YOUR_ZONE_ID>"
@@ -93,6 +99,12 @@ cd ansible
 ansible-playbook -i hosts --extra-vars "ansible_user=ubuntu vpc_cidr=<VPC_CIDR>" --private-key <SSH_PRIVATE_KEY_PATH> nix-server.yml
 ```
 
+If you encounter locale issues you may want to prefix with
+
+```bash
+LANC=C.UTF-8 LC_ALL=C.UTF-8 ansible-playbook ...
+```
+
 ### Access the Kubernetes cluster
 
 ```bash
@@ -117,7 +129,7 @@ manifests][buildbarn_manifests] provided by the project. This Helm chart makes i
 parameterize the configuration files.
 
 ```bash
-$ cd buildbarn/terraform
+$ cd buildbarn/kubernetes
 
 $ cat local/cluster-autoscaler.yaml
 
@@ -166,10 +178,10 @@ frontend:
   host: bb-frontend.example.org
 
 browser:
-  host: bb-browser.example.org
+  host: bb-browser.<YOUR_DOMAIN>
 
 scheduler:
-  host: bb-scheduler.example.org
+  host: bb-scheduler.<YOUR_DOMAIN>
 
 nix:
   ip: 10.0.0.1 # Update with actual private IP of the nix server from the terraform output.
@@ -209,6 +221,10 @@ $ kubectl get ingress -n buildbarn
 NAME        CLASS   HOSTS                       ADDRESS                                                                   PORTS   AGE
 browser     nginx   bb-browser.bazelnix.net     af06a8018c91145e89999e0fb55192fe-1992479129.eu-west-1.elb.amazonaws.com   80      2d23h
 scheduler   nginx   bb-scheduler.bazelnix.net   af06a8018c91145e89999e0fb55192fe-1992479129.eu-west-1.elb.amazonaws.com   80      2d23h
+
+$ nc -v af06a8018c91145e89999e0fb55192fe-1992479129.eu-west-1.elb.amazonaws.com 80
+Ncat: Version 7.93 ( https://nmap.org/ncat )
+Ncat: Connected to 34.241.215.173:80.
 ```
 
 List the service endpoint for the GRPC API end ensure it's accessible.

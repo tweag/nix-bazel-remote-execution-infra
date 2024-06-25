@@ -124,6 +124,8 @@ Example config for Buildbarn:
 ```conf
 build --remote_timeout=3600
 build --remote_executor=grpc://<REMOTE_API_ADDR>:<REMOTE_API_PORT>
+build --remote_default_exec_properties OSFamily=linux
+build --remote_default_exec_properties container-image="docker://ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448"
 ```
 
 You can use one of the
