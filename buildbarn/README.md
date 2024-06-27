@@ -243,3 +243,14 @@ Ncat: Connected to 34.241.215.173:8980.
 ```
 
 [buildbarn_manifests]: https://github.com/buildbarn/bb-deployments/tree/1f221b54c99b57e3953865a75069a84245d96b56/kubernetes
+
+## Tear Down
+
+When you're done you can destroy the infrastructure using the following commands:
+
+```bash
+# buildbarn/kubernetes
+$ kubectl delete ns buildbarn
+# buildbarn/terraform
+$ terraform destroy -var-file=variables.tfvars
+```
